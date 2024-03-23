@@ -1808,6 +1808,17 @@ func ExampleAny() {
 }
 
 func ExampleExists() {
+	ds := goqu.Select(goqu.Exists(goqu.From("test")))
+	sql, args, _ := ds.ToSQL()
+	fmt.Println(sql, args)
+
+	sql, args, _ = ds.Prepared(true).ToSQL()
+	// Output:
+	// SELECT EXISTS ((SELECT * FROM "test")) []
+	// SELECT EXISTS ((SELECT * FROM "test")) []
+}
+
+func ExampleExists_inWhereClauses() {
 	ds := goqu.From("test").Where(
 		goqu.Exists(goqu.From("other").Where(goqu.Ex{"test_id": goqu.I("id")})),
 	)
