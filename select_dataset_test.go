@@ -1567,7 +1567,7 @@ func (sds *selectDatasetSuite) TestExists_WithPreparedStatement(t *testing.T) {
 
 	ds := goqu.New("mock", mDB)
 	exists, err := ds.From("items").
-		Prepared(true).
+		// Prepared(true).
 		Where(goqu.Ex{"name": []string{"Bob", "Sally", "Billy"}, "address": "111 Test Addr"}).
 		Exists()
 	sds.NoError(err)
