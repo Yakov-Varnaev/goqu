@@ -679,7 +679,7 @@ func (sd *SelectDataset) Exists() (bool, error) {
 // Generates the SELECT EXISTS(...) sql for this dataset and uses Exec#ScanValContext to scan the result into an bool.
 func (sd *SelectDataset) ExistsContext(ctx context.Context) (bool, error) {
 	var exists bool
-	_, err := Select(Exists(sd)).ScanValContext(ctx, &exists)
+	_, err := newDataset(sd.dialect.Dialect(), sd.queryFactory).Select(Exists(sd)).ScanValContext(ctx, &exists)
 	return exists, err
 }
 
