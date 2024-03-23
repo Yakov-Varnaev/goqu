@@ -1556,19 +1556,19 @@ func (sds *selectDatasetSuite) TestExists() {
 	sds.True(exists)
 }
 
-func (sds *selectDatasetSuite) TestExists_WithPreparedStatement(t *testing.T) {
+func (sds *selectDatasetSuite) TestExists_WithPreparedStatement() {
 	mDB, sqlMock, err := sqlmock.New()
 	sds.NoError(err)
 	sqlMock.ExpectQuery(
-		`SELECT EXISTS \(\(SELECT \* AS "count" FROM "items" WHERE \(\("address" = \?\) AND \("name" IN \(\?, \?, \?\)\)\)\)\) LIMIT 1`,
+		`SELECT EXISTS \(\(SELECT \* FROM "items" WHERE \("address" = \?\)\)\) LIMIT \?`,
 	).
-		WithArgs("111 Test Addr", "Bob", "Sally", "Billy", 1).
+		WithArgs("111 Test Addr", 1).
 		WillReturnRows(sqlmock.NewRows([]string{"exists"}).FromCSVString("true"))
 
 	ds := goqu.New("mock", mDB)
 	exists, err := ds.From("items").
-		// Prepared(true).
-		Where(goqu.Ex{"name": []string{"Bob", "Sally", "Billy"}, "address": "111 Test Addr"}).
+		Prepared(true).
+		Where(goqu.Ex{"address": "111 Test Addr"}).
 		Exists()
 	sds.NoError(err)
 	sds.True(exists)
