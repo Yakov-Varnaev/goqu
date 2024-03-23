@@ -1813,6 +1813,7 @@ func ExampleExists() {
 	fmt.Println(sql, args)
 
 	sql, args, _ = ds.Prepared(true).ToSQL()
+	fmt.Println(sql, args)
 	// Output:
 	// SELECT EXISTS ((SELECT * FROM "test")) []
 	// SELECT EXISTS ((SELECT * FROM "test")) []
